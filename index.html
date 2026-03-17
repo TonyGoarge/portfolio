@@ -220,11 +220,12 @@
       border: 8px solid #2a2a3e;
       border-radius: 40px;
       position: relative;
-      box-shadow: 
-        -30px 30px 80px rgba(0, 0, 0, 0.8),
-        0 0 40px rgba(0, 229, 255, 0.15), 
-        inset 0 0 0 2px rgba(255,255,255,0.05);
+      /* Removed heavy box-shadow for performance */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       overflow: hidden;
+      /* Added hardware acceleration hint */
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     .mockup-phone::before {
@@ -250,11 +251,10 @@
       display: flex;
       flex-direction: column;
     }
-    
     .mockup-app-bar {
       height: 70px;
-      background: rgba(19, 19, 28, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(19, 19, 28, 0.95);
+      /* Removed backdrop-filter for performance */
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: flex-end;
@@ -282,11 +282,7 @@
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      animation: pulse 3s infinite ease-in-out alternate;
-    }
-    
-    .mockup-card:nth-child(2) {
-      animation-delay: 1s;
+      /* Removed continuous pulse animation to save CPU */
     }
 
     .mockup-fab {
@@ -297,7 +293,7 @@
       height: 50px;
       background: var(--accent);
       border-radius: 50%;
-      box-shadow: 0 8px 20px rgba(0, 229, 255, 0.4);
+      box-shadow: 0 4px 10px rgba(0, 229, 255, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -313,12 +309,7 @@
 
     @keyframes floatWidget {
       0%, 100% { transform: translateY(0) rotateY(-15deg) rotateX(5deg); }
-      50% { transform: translateY(-20px) rotateY(-12deg) rotateX(8deg); }
-    }
-    
-    @keyframes pulse {
-      0% { opacity: 0.5; transform: scale(0.98); }
-      100% { opacity: 1; transform: scale(1); border-color: rgba(0,229,255,0.3); }
+      50% { transform: translateY(-10px) rotateY(-15deg) rotateX(5deg); }
     }
 
     /* SECTIONS */
@@ -359,7 +350,14 @@
       padding: 2rem 0;
       border-bottom: 1px solid var(--border);
       position: relative;
-      transition: background 0.2s;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out, background 0.2s;
+    }
+    
+    .timeline-item.visible {
+      opacity: 1;
+      transform: none;
     }
 
     .timeline-item:first-child { border-top: 1px solid var(--border); }
@@ -685,7 +683,7 @@
     <div class="reveal">
       <h2 class="section-title">Experience</h2>
     </div>
-    <div class="timeline reveal">
+    <div class="timeline">
  
     <div class="timeline-item">
         <div class="timeline-date"><span class="timeline-dot"></span>Feb 2025 — Present</div>
@@ -694,55 +692,147 @@
           <div class="timeline-role">Flutter Developer</div>
           <div class="timeline-desc">Building cross-platform apps remotely using Clean Architecture, BLoC/GetX, Firebase, and RESTful APIs across a suite of 4 products.</div>
           <div class="project-list">
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">🚖 Kiro Travel App <span style="font-size:0.65rem;color:var(--accent);font-weight:400;"><a href="https://play.google.com/store/apps/details?id=com.kiro_travel&hl=en" target="_blank" style="color: inherit; text-decoration: underline;">Google Play</a></span></span><span class="proj-sep">—</span><span class="proj-detail">Taxi & transfer booking platform supporting one-way/round trips with eco, van, and sedan options, promo codes, wallet balance, and Stripe payments — built with Flutter + BLoC.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">✝️ Suis Moi App</span><span class="proj-sep">—</span><span class="proj-detail">Spiritual app for Mass readings, the Agpeya, and liturgical prayers — bringing all church texts together in one place.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">⚙️ Mini Admin</span><span class="proj-sep">—</span><span class="proj-detail">Centralized dashboard for Kiro Travel & Hotels to manage bookings, monitor users, track payments, and oversee services.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">🚗 Driver App</span><span class="proj-sep">—</span><span class="proj-detail">Driver-facing app with live order assignment, route tracking, and real-time trip status updates.</span></div>
+            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">🚖 Kiro Travel App <span style="font-size:0.65rem;color:var(--accent);font-weight:400;"><a href="https://play.google.com/store/apps/details?id=com.kiro_travel&hl=en" target="_blank" style="color: inherit; text-decoration: underline;">Google Play</a></span></span><span class="proj-sep">—</span></div>
+                      <div class="timeline-desc">Taxi & transfer booking platform supporting one-way/round trips with eco, van, and sedan options, promo codes, wallet balance, and Stripe payments — built with Flutter + BLoC.</div>
+
+            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">✝️ Suis Moi App</span><span class="proj-sep">—</span></div>
+                                  <div class="timeline-desc">Spiritual app for Mass readings, the Agpeya, and liturgical prayers — bringing all church texts together in one place.</div>
+
+            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">⚙️ Mini Admin</span><span class="proj-sep">—</span></div>
+                                  <div class="timeline-desc">Centralized dashboard for Kiro Travel & Hotels to manage bookings, monitor users, track payments, and oversee services.</div>
+
+            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">🚗 Driver App</span><span class="proj-sep">—</span></div>
+                                  <div class="timeline-desc">Driver-facing app with live order assignment, route tracking, and real-time trip status updates.</div>
           </div>
         </div>
       </div>
  
-      <div class="timeline-item">
-        <div class="timeline-date"><span class="timeline-dot"></span>Jun 2024 - Jan 2025</div>
-        <div>
-          <div class="timeline-company">Runsoft<span style="color:var(--accent);font-size:0.7rem;font-family:'DM Mono',monospace;font-weight:400;">· On Site</span></div>
-          <div class="timeline-role">Flutter Developer</div>
-          <div class="timeline-desc">Delivered 6 production apps covering food tech, logistics, and healthcare verticals.</div>
-          <div class="project-list">
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Food System User App</span><span class="proj-sep">—</span><span class="proj-detail">Customer-facing app for browsing menus, placing orders, and tracking delivery in real time.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Delivery App</span><span class="proj-sep">—</span><span class="proj-detail">Driver-side app with live GPS tracking, order assignment, and route optimization.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Admin App</span><span class="proj-sep">—</span><span class="proj-detail">Dashboard for restaurant managers to manage orders, menus, and staff in real time.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Paddle App</span><span class="proj-sep">—</span><span class="proj-detail">Sports booking platform for reserving paddle courts with scheduling and payment integration.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Sahel App</span><span class="proj-sep">—</span><span class="proj-detail">Coastal destination guide with listings, bookings, and location-aware recommendations.</span></div>
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">Clinic System</span><span class="proj-sep">—</span><span class="proj-detail">Patient management app for appointment booking, medical records, and doctor schedules.</span></div>
-          </div>
-        </div>
+   <div class="timeline-item">
+  <div class="timeline-date"><span class="timeline-dot"></span>Jun 2024 - Jan 2025</div>
+  <div>
+    <div class="timeline-company">Runsoft
+      <span style="color:var(--accent);font-size:0.7rem;font-family:'DM Mono',monospace;font-weight:400;">· On Site</span>
+    </div>
+
+    <div class="timeline-role">Flutter Developer</div>
+
+    <div class="timeline-desc">
+      Delivered 6 production apps covering food tech, logistics, and healthcare verticals.
+    </div>
+
+    <div class="project-list">
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Food System User App</span>
       </div>
- 
-      <div class="timeline-item">
-        <div class="timeline-date"><span class="timeline-dot"></span>Dec 2023 - Jun 2024</div>
-        <div>
-          <div class="timeline-company">Inza<span style="color:var(--accent);font-size:0.7rem;font-family:'DM Mono',monospace;font-weight:400;">· Hybrid</span></div>
-          <div class="timeline-role">Flutter Developer</div>
-          <div class="timeline-desc">Built a recruiter-focused career platform integrating RESTful APIs and location-based features via Google Maps SDK.</div>
-          <div class="project-list">
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">💼 XCareer App</span><span class="proj-sep">—</span><span class="proj-detail">Recruitment platform for hiring teams to post jobs, manage candidates, and streamline the interview pipeline.</span></div>
-          </div>
-        </div>
+      <div class="timeline-desc">
+        Customer-facing app for browsing menus, placing orders, and tracking delivery in real time.
       </div>
- 
-      <div class="timeline-item">
-        <div class="timeline-date"><span class="timeline-dot"></span>Aug 2023 - Nov 2023</div>
-        <div>
-          <div class="timeline-company">Paradise</div>
-          <div class="timeline-role">Flutter Developer</div>
-          <div class="timeline-desc">First professional Flutter role — shipped a production app and established strong Git, API integration, and clean code habits.</div>
-          <div class="project-list">
-            <div class="proj-item"><span class="proj-dot">▸</span><span class="proj-name">🕐 Attendance App</span><span class="proj-sep">—</span><span class="proj-detail">Employee check-in/check-out tracking app with location verification, shift management, and attendance reports.</span></div>
-          </div>
-        </div>
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Delivery App</span>
       </div>
- 
+      <div class="timeline-desc">
+        Driver-side app with live GPS tracking, order assignment, and route optimization.
+      </div>
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Admin App</span>
+      </div>
+      <div class="timeline-desc">
+        Dashboard for restaurant managers to manage orders, menus, and staff in real time.
+      </div>
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Paddle App</span>
+      </div>
+      <div class="timeline-desc">
+        Sports booking platform for reserving paddle courts with scheduling and payment integration.
+      </div>
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Sahel App</span>
+      </div>
+      <div class="timeline-desc">
+        Coastal destination guide with listings, bookings, and location-aware recommendations.
+      </div>
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">Clinic System</span>
+      </div>
+      <div class="timeline-desc">
+        Patient management app for appointment booking, medical records, and doctor schedules.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="timeline-item">
+  <div class="timeline-date"><span class="timeline-dot"></span>Dec 2023 - Jun 2024</div>
+  <div>
+
+    <div class="timeline-company">Inza
+      <span style="color:var(--accent);font-size:0.7rem;font-family:'DM Mono',monospace;font-weight:400;">· Hybrid</span>
+    </div>
+
+    <div class="timeline-role">Flutter Developer</div>
+
+    <div class="timeline-desc">
+      Built a recruiter-focused career platform integrating RESTful APIs and location-based features via Google Maps SDK.
+    </div>
+
+    <div class="project-list">
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">💼 XCareer App</span>
+      </div>
+
+      <div class="timeline-desc">
+        Recruitment platform for hiring teams to post jobs, manage candidates, and streamline the interview pipeline.
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="timeline-item">
+  <div class="timeline-date"><span class="timeline-dot"></span>Aug 2023 - Nov 2023</div>
+  <div>
+
+    <div class="timeline-company">Paradise</div>
+
+    <div class="timeline-role">Flutter Developer</div>
+
+    <div class="timeline-desc">
+      First professional Flutter role — shipped a production app and established strong Git, API integration, and clean code habits.
+    </div>
+
+    <div class="project-list">
+
+      <div class="proj-item">
+        <span class="proj-dot">▸</span>
+        <span class="proj-name">🕐 Attendance App</span>
+      </div>
+
+      <div class="timeline-desc">
+        Employee check-in/check-out tracking app with location verification, shift management, and attendance reports.
+      </div>
+
+    </div>
+
+  </div>
+</div>
     </div>
   </section>
  
@@ -933,7 +1023,7 @@
 
   <script>
     // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
+    const reveals = document.querySelectorAll('.reveal, .timeline-item');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); }
